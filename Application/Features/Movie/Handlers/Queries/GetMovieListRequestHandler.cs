@@ -1,15 +1,15 @@
 using AutoMapper;
-using MovieAPI.Application.DTOs.Movie;
-using MovieAPI.Application.Features.Movies.Requests.Queries;
-using MovieAPI.Application.Persistence.Contracts;
+using Application.DTOs.Movie;
+using Application.Features.Movies.Requests.Queries;
+using Application.Contracts;
 using MediatR;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MovieAPI.Application.Features.Movies.Handlers.Queries
+namespace Application.Features.Movies.Handlers.Queries
 {
-    public class GetMovieListQueryHandler : IRequestHandler<GetMovieListQuery, List<MovieDto>>
+    public class GetMovieListQueryHandler : IRequestHandler<GetMovieListQuery, List<MovieDTO>>
     {
         private readonly IMapper _mapper;
         private readonly IMovieRepository _movieRepository;
@@ -20,12 +20,12 @@ namespace MovieAPI.Application.Features.Movies.Handlers.Queries
             _mapper = mapper;
         }
 
-        public async Task<List<MovieDto>> Handle(GetMovieListQuery request, CancellationToken cancellationToken)
+        public async Task<List<MovieDTO>> Handle(GetMovieListQuery request, CancellationToken cancellationToken)
         {
-            var movies = await _movieRepository.GetAll();
-            var movieDtos = _mapper.Map<List<MovieDto>>(movies);
+            var movies = await _movieRepository.GetList();
+            var movieDTOs = _mapper.Map<List<MovieDTO>>(movies);
 
-            return movieDtos;
+            return movieDTOs;
         }
     }
 }

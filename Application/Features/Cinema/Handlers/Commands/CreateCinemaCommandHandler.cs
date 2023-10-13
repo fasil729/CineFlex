@@ -1,16 +1,18 @@
 using AutoMapper;
 using FluentValidation;
+using Application.DTOs.Movie;
 using Application.DTOs.Cinema;
 using Application.Exceptions;
 using Application.Features.Cinemas.Requests.Commands;
-using Application.Persistence.Contracts;
+using Application.Contracts;
 using Application.Responses;
 using Domain.Entities;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.DTOs.Cinema.Validators;
 
-namespace MovieAPI.Application.Features.Cinemas.Handlers.Commands
+namespace Application.Features.Cinemas.Handlers.Commands
 {
     public class CreateCinemaCommandHandler : IRequestHandler<CreateCinemaCommand, BaseCommandResponse>
     {
@@ -27,15 +29,18 @@ namespace MovieAPI.Application.Features.Cinemas.Handlers.Commands
         {
             var response = new BaseCommandResponse();
 
-            var validator = new CreateCinemaCommandValidator();
-            var validationResult = await validator.ValidateAsync(request);
+            var validator = new CreateCinemaDTOValidator();
+            var validationResult = await validator.ValidateAsync(request.createCinemaDTO);
 
             if (!validationResult.IsValid)
             {
-                throw new ValidationException(validationResult.Errors);
+                response.Success = false;
+                response.Message = "Creation Failed";
+                response.Errors = validationResult.Errors.Select(q => q.ErrorMessage).ToList();
+                return response;
             }
 
-            var cinema = _mapper.Map<Cinema>(request.CreateCinemaDto);
+            var cinema = _mapper.Map<Cinema>(request);
             cinema = await _cinemaRepository.Add(cinema);
 
             response.Success = true;
@@ -43,16 +48,6 @@ namespace MovieAPI.Application.Features.Cinemas.Handlers.Commands
             response.Id = cinema.Id;
 
             return response;
-        }
-    }
-
-    public class CreateCinemaCommandValidator : AbstractValidator<CreateCinemaCommand>
-    {
-        public CreateCinemaCommandValidator()
-        {
-            RuleFor(command => command.CreateCinemaDto.Name).NotEmpty().MaximumLength(100);
-            RuleFor(command => command.CreateCinemaDto.Location).NotEmpty().MaximumLength(100);
-            // Add additional validation rules as per your requirements
         }
     }
 }

@@ -1,13 +1,13 @@
 using AutoMapper;
-using MovieAPI.Application.Exceptions;
-using MovieAPI.Application.Features.Movies.Requests.Commands;
-using MovieAPI.Application.Persistence.Contracts;
-using MovieAPI.Application.Responses;
+using Application.Exceptions;
+using Application.Features.Movies.Requests.Commands;
+using Application.Contracts;
+using Application.Responses;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MovieAPI.Application.Features.Movies.Handlers.Commands
+namespace Application.Features.Movies.Handlers.Commands
 {
     public class DeleteMovieCommandHandler : IRequestHandler<DeleteMovieCommand, BaseCommandResponse>
     {
@@ -24,7 +24,7 @@ namespace MovieAPI.Application.Features.Movies.Handlers.Commands
         {
             var response = new BaseCommandResponse();
 
-            var movie = await _movieRepository.GetById(request.Id);
+            var movie = await _movieRepository.GetDetail(request.Id);
             if (movie == null)
             {
                 throw new NotFoundException("Movie", request.Id);

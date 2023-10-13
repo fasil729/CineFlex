@@ -1,16 +1,17 @@
 using AutoMapper;
 using FluentValidation;
-using MovieAPI.Application.DTOs.Movie;
-using MovieAPI.Application.Exceptions;
-using MovieAPI.Application.Features.Movies.Requests.Commands;
-using MovieAPI.Application.Persistence.Contracts;
+using Application.DTOs.Movie;
+using Application.Exceptions;
+using Application.Features.Movies.Requests.Commands;
+using Application.Contracts;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.DTOs.Movie.Validators;
 
-namespace MovieAPI.Application.Features.Movies.Handlers.Commands
+namespace Application.Features.Movies.Handlers.Commands
 {
-    public class UpdateMovieCommandHandler : IRequestHandler<UpdateMovieCommand, MovieDto>
+    public class UpdateMovieCommandHandler : IRequestHandler<UpdateMovieCommand, MovieDTO>
     {
         private readonly IMapper _mapper;
         private readonly IMovieRepository _movieRepository;
@@ -21,27 +22,27 @@ namespace MovieAPI.Application.Features.Movies.Handlers.Commands
             _mapper = mapper;
         }
 
-        public async Task<MovieDto> Handle(UpdateMovieCommand request, CancellationToken cancellationToken)
+        public async Task<MovieDTO> Handle(UpdateMovieCommand request, CancellationToken cancellationToken)
         {
-            var validator = new UpdateMovieCommandValidator();
-            var validationResult = await validator.ValidateAsync(request);
+            var validator = new UpdateMovieDTOValidator();
+            var validationResult = await validator.ValidateAsync(request.updateMovieDTO);
 
             if (!validationResult.IsValid)
             {
-                throw new ValidationException(validationResult.Errors);
+                throw new FluentValidation.ValidationException(validationResult.Errors);
             }
 
-            var movie = await _movieRepository.GetById(request.Id);
+            var movie = await _movieRepository.GetDetail(request.updateMovieDTO.MovieId);
             if (movie == null)
             {
-                throw new NotFoundException("Movie", request.Id);
+                throw new NotFoundException("Movie", request.updateMovieDTO.MovieId);
             }
 
             _mapper.Map(request, movie);
             await _movieRepository.Update(movie);
 
-            var movieDto = _mapper.Map<MovieDto>(movie);
-            return movieDto;
+            var movieDTO = _mapper.Map<MovieDTO>(movie);
+            return movieDTO;
         }
     }
 

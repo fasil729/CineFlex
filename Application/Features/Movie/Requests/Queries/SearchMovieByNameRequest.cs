@@ -1,10 +1,10 @@
 using MediatR;
-using MovieAPI.Application.DTOs.Movie;
+using Application.DTOs.Movie;
 using System.Collections.Generic;
 
-namespace MovieAPI.Application.Features.Movies.Requests.Queries
+namespace Application.Features.Movies.Requests.Queries
 {
-    public class SearchMovieQuery : IRequest<List<MovieDto>>
+    public class SearchMovieQuery : IRequest<List<MovieDTO>>
     {
         public string SearchTerm { get; set; }
     }

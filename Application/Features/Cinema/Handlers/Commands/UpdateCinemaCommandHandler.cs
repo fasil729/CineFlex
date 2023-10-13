@@ -1,16 +1,17 @@
 using AutoMapper;
 using FluentValidation;
-using MovieAPI.Application.DTOs.Cinema;
-using MovieAPI.Application.Exceptions;
-using MovieAPI.Application.Features.Cinemas.Requests.Commands;
-using MovieAPI.Application.Persistence.Contracts;
-using MovieAPI.Application.Responses;
-using MovieAPI.Domain.Entities;
+using Application.DTOs.Cinema;
+using Application.Exceptions;
+using Application.Features.Cinemas.Requests.Commands;
+using Application.Contracts;
+using Application.Responses;
+using Domain.Entities;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.DTOs.Cinema.Validators;
 
-namespace MovieAPI.Application.Features.Cinemas.Handlers.Commands
+namespace Application.Features.Cinemas.Handlers.Commands
 {
     public class UpdateCinemaCommandHandler : IRequestHandler<UpdateCinemaCommand, BaseCommandResponse>
     {
@@ -27,21 +28,24 @@ namespace MovieAPI.Application.Features.Cinemas.Handlers.Commands
         {
             var response = new BaseCommandResponse();
 
-            var validator = new UpdateCinemaCommandValidator();
-            var validationResult = await validator.ValidateAsync(request);
+            var validator = new UpdateCinemaDTOValidator();
+            var validationResult = await validator.ValidateAsync(request.updateCinemaDTO);
 
             if (!validationResult.IsValid)
             {
-                throw new ValidationException(validationResult.Errors);
+                response.Success = false;
+                response.Message = "Update Failed";
+                response.Errors = validationResult.Errors.Select(q => q.ErrorMessage).ToList();
+                return response;
             }
 
-            var cinema = await _cinemaRepository.GetById(request.Id);
+            var cinema = await _cinemaRepository.GetDetail(request.updateCinemaDTO.CinemaId);
             if (cinema == null)
             {
-                throw new NotFoundException("Cinema", request.Id);
+                throw new NotFoundException("Cinema", request.updateCinemaDTO.CinemaId);
             }
 
-            _mapper.Map(request.UpdateCinemaDto, cinema);
+            _mapper.Map(request.updateCinemaDTO, cinema);
             await _cinemaRepository.Update(cinema);
 
             response.Success = true;
@@ -52,13 +56,6 @@ namespace MovieAPI.Application.Features.Cinemas.Handlers.Commands
         }
     }
 
-    public class UpdateCinemaCommandValidator : AbstractValidator<UpdateCinemaCommand>
-    {
-        public UpdateCinemaCommandValidator()
-        {
-            RuleFor(command => command.UpdateCinemaDto.Name).NotEmpty().MaximumLength(100);
-            RuleFor(command => command.UpdateCinemaDto.Location).NotEmpty().MaximumLength(100);
-            // Add additional validation rules as per your requirements
-        }
-    }
+   
+    
 }

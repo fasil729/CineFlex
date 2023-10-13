@@ -14,8 +14,10 @@ namespace MovieAPI.Application.Profiles
         {
             CreateMap<Movie, CreateMovieDTO>().ReverseMap();
             CreateMap<Movie, UpdateMovieDTO>().ReverseMap();
+            CreateMap<Movie, MovieDTO>().ReverseMap();
             CreateMap<Cinema, CreateCinemaDTO>().ReverseMap();
             CreateMap<Cinema, UpdateCinemaDTO>().ReverseMap();
+            CreateMap<Cinema, CinemaDTO>().ReverseMap();
         }
     }
 }

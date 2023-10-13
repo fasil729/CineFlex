@@ -1,9 +1,9 @@
 using MediatR;
-using MovieAPI.Application.DTOs.Cinema;
+using Application.DTOs.Cinema;
 
-namespace MovieAPI.Application.Features.Cinemas.Requests.Queries
+namespace Application.Features.Cinemas.Requests.Queries
 {
-    public class GetCinemaDetailQuery : IRequest<CinemaDto>
+    public class GetCinemaDetailQuery : IRequest<CinemaDTO>
     {
         public int Id { get; set; }
     }

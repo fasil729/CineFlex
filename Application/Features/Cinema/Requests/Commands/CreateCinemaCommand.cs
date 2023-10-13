@@ -1,11 +1,12 @@
 using MediatR;
-using MovieAPI.Application.DTOs.Cinema;
+using Application.DTOs.Cinema;
+using Application.Responses;
 
-namespace MovieAPI.Application.Features.Cinemas.Requests.Commands
+namespace Application.Features.Cinemas.Requests.Commands
 {
-    public class CreateCinemaCommand : IRequest<CinemaDto>
+    public class CreateCinemaCommand : IRequest<BaseCommandResponse>
+
     {
-        public string Name { get; set; }
-        public string Location { get; set; }
+        public CreateCinemaDTO createCinemaDTO {get; set;}
     }
 }

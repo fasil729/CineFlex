@@ -1,15 +1,17 @@
 using AutoMapper;
 using FluentValidation;
-using MovieAPI.Application.DTOs.Movie;
-using MovieAPI.Application.Features.Movies.Requests.Commands;
-using MovieAPI.Application.Persistence.Contracts;
+using Application.DTOs.Movie;
+using Application.Features.Movies.Requests.Commands;
+using Application.Contracts;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.DTOs.Movie.Validators;
+using Domain.Entities;
 
-namespace MovieAPI.Application.Features.Movies.Handlers.Commands
+namespace Application.Features.Movies.Handlers.Commands
 {
-    public class CreateMovieCommandHandler : IRequestHandler<CreateMovieCommand, MovieDto>
+    public class CreateMovieCommandHandler : IRequestHandler<CreateMovieCommand, MovieDTO>
     {
         private readonly IMapper _mapper;
         private readonly IMovieRepository _movieRepository;
@@ -20,10 +22,10 @@ namespace MovieAPI.Application.Features.Movies.Handlers.Commands
             _mapper = mapper;
         }
 
-        public async Task<MovieDto> Handle(CreateMovieCommand request, CancellationToken cancellationToken)
+        public async Task<MovieDTO> Handle(CreateMovieCommand request, CancellationToken cancellationToken)
         {
-            var validator = new CreateMovieCommandValidator();
-            var validationResult = await validator.ValidateAsync(request);
+            var validator = new CreateMovieDTOValidator();
+            var validationResult = await validator.ValidateAsync(request.createMovieDTO);
 
             if (!validationResult.IsValid)
             {
@@ -31,10 +33,10 @@ namespace MovieAPI.Application.Features.Movies.Handlers.Commands
             }
 
             var movie = _mapper.Map<Movie>(request);
-            await _movieRepository.Create(movie);
+            await _movieRepository.Add(movie);
 
-            var movieDto = _mapper.Map<MovieDto>(movie);
-            return movieDto;
+            var movieDTO = _mapper.Map<MovieDTO>(movie);
+            return movieDTO;
         }
     }
 

@@ -1,15 +1,15 @@
 using AutoMapper;
-using MovieAPI.Application.DTOs.Movie;
-using MovieAPI.Application.Exceptions;
-using MovieAPI.Application.Features.Movies.Requests.Queries;
-using MovieAPI.Application.Persistence.Contracts;
+using Application.DTOs.Movie;
+using Application.Exceptions;
+using Application.Features.Movies.Requests.Queries;
+using Application.Contracts;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MovieAPI.Application.Features.Movies.Handlers.Queries
+namespace Application.Features.Movies.Handlers.Queries
 {
-    public class GetMovieDetailQueryHandler : IRequestHandler<GetMovieDetailQuery, MovieDto>
+    public class GetMovieDetailQueryHandler : IRequestHandler<GetMovieDetailQuery, MovieDTO>
     {
         private readonly IMapper _mapper;
         private readonly IMovieRepository _movieRepository;
@@ -20,17 +20,17 @@ namespace MovieAPI.Application.Features.Movies.Handlers.Queries
             _mapper = mapper;
         }
 
-        public async Task<MovieDto> Handle(GetMovieDetailQuery request, CancellationToken cancellationToken)
+        public async Task<MovieDTO> Handle(GetMovieDetailQuery request, CancellationToken cancellationToken)
         {
-            var movie = await _movieRepository.GetById(request.Id);
+            var movie = await _movieRepository.GetDetail(request.Id);
             if (movie == null)
             {
                 throw new NotFoundException("Movie", request.Id);
             }
 
-            var movieDto = _mapper.Map<MovieDto>(movie);
+            var movieDTO = _mapper.Map<MovieDTO>(movie);
 
-            return movieDto;
+            return movieDTO;
         }
     }
 }

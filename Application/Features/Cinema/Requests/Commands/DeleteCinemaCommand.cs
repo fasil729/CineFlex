@@ -1,7 +1,7 @@
 using MediatR;
-using MovieAPI.Application.Responses;
+using Application.Responses;
 
-namespace MovieAPI.Application.Features.Cinemas.Requests.Commands
+namespace Application.Features.Cinemas.Requests.Commands
 {
     public class DeleteCinemaCommand : IRequest<BaseCommandResponse>
     {

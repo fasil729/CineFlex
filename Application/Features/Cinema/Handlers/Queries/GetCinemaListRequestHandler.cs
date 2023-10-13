@@ -1,16 +1,16 @@
 using AutoMapper;
-using MovieAPI.Application.DTOs.Cinema;
-using MovieAPI.Application.Features.Cinemas.Requests.Queries;
-using MovieAPI.Application.Persistence.Contracts;
-using MovieAPI.Application.Responses;
+using Application.DTOs.Cinema;
+using Application.Features.Cinemas.Requests.Queries;
+using Application.Contracts;
+using Application.Responses;
 using MediatR;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MovieAPI.Application.Features.Cinemas.Handlers.Queries
+namespace Application.Features.Cinemas.Handlers.Queries
 {
-    public class GetCinemaListQueryHandler : IRequestHandler<GetCinemaListQuery, IList<CinemaDto>>
+    public class GetCinemaListQueryHandler : IRequestHandler<GetCinemaListQuery, IList<CinemaDTO>>
     {
         private readonly IMapper _mapper;
         private readonly ICinemaRepository _cinemaRepository;
@@ -21,12 +21,12 @@ namespace MovieAPI.Application.Features.Cinemas.Handlers.Queries
             _mapper = mapper;
         }
 
-        public async Task<IList<CinemaDto>> Handle(GetCinemaListQuery request, CancellationToken cancellationToken)
+        public async Task<IList<CinemaDTO>> Handle(GetCinemaListQuery request, CancellationToken cancellationToken)
         {
-            var cinemas = await _cinemaRepository.GetAll();
-            var cinemaDtos = _mapper.Map<IList<CinemaDto>>(cinemas);
+            var cinemas = await _cinemaRepository.GetList();
+            var cinemaDTOs = _mapper.Map<IList<CinemaDTO>>(cinemas);
 
-            return cinemaDtos;
+            return cinemaDTOs;
         }
     }
 }

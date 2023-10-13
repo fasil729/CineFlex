@@ -1,4 +1,5 @@
 using Application.Contracts;
+using Persistence;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,9 @@ namespace Persistence.Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T: class
     {
-        private readonly MovieApiDbContext _dbContext;
+        private readonly ApplicationDbContext _dbContext;
 
-        public GenericRepository(MovieApiDbContext dbContext)
+        public GenericRepository(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
         }

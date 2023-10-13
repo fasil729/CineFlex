@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Application.Contracts
 {
-    public interface ICinimaRepository : IGenericRepository<Cinema>
+    public interface ICinemaRepository : IGenericRepository<Cinema>
     {
-        Task<T> GetCinimaShowTime<T>(int CinemaId);
+        // Task<T> GetCinimaShowTime<T>(int CinemaId);
     }
 }

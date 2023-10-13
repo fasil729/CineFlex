@@ -8,6 +8,6 @@ namespace Application.Contracts
 {
     public interface IMovieRepository : IGenericRepository<Movie>
     {
-        
+        // Task<List<Movie> Search(int id);
     }
 }
