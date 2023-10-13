@@ -1,4 +1,4 @@
-﻿using Application.Contracts;
+using Application.Contracts;
 using Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -9,9 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Persistence;
-using BlogApplication.Persistence.Repositories;
+using Persistence.Repositories;
 
-namespace BlogApplication.Persistence
+namespace Persistence
 {
     public static class PersistenceServicesRegistration
     {

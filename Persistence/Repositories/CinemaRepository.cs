@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlogApplication.Persistence.Repositories
+namespace Persistence.Repositories
 {
     public class CinemaRepository : GenericRepository<Cinema>, ICinemaRepository
     {
